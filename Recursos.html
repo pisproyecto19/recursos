@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recursos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos básicos para el cuerpo y títulos */
+        body {
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #8A2BE2; /* ¡Fondo morado! Puedes cambiar este código hexadecimal por otro tono de morado si lo prefieres */
+            color: #333;
+            line-height: 1.6;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #FFFFFF; /* Color de texto blanco para el título principal */
+            font-family: 'Merriweather', serif;
+            font-size: 2.8em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3); /* Sombra para que resalte más */
+        }
+
+        /* Contenedor principal de los videos */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-bottom: 40px;
+        }
+
+        /* Estilo para cada cuadro de video */
+        .video-box {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .video-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Contenedor del reproductor de video */
+        .video-player-container {
+            width: 100%;
+            aspect-ratio: 16 / 9; /* Relación de aspecto estándar para videos (16:9) */
+            background-color: #000; /* Fondo negro para el reproductor */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-size: 1.2em;
+            cursor: pointer;
+            position: relative; /* Para posicionar el ícono de play */
+        }
+
+        /* Estilo del ícono de play sobre el placeholder */
+        .video-player-container::before {
+            content: '▶'; /* Ícono de play */
+            position: absolute;
+            font-size: 4em;
+            color: rgba(255, 255, 255, 0.8);
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            transition: color 0.2s ease;
+        }
+
+        .video-player-container:hover::before {
+            color: rgba(255, 255, 255, 1);
+        }
+        
+        /* Oculta el ícono de play cuando el video se está reproduciendo */
+        .video-player-container.playing::before {
+            display: none;
+        }
+
+        /* Estilo para el reproductor de video (elemento <video>) */
+        .video-player-container video {
+            width: 100%;
+            height: 100%;
+            display: block; /* Asegura que no haya espacio extra debajo del video */
+        }
+
+        /* Título debajo del video */
+        .video-title {
+            padding: 15px;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #730975;
+            flex-grow: 1; /* Permite que el título ocupe el espacio restante */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fcfcfc;
+            border-top: 1px solid #eee;
+        }
+
+        /* Media Queries para responsividad */
+        @media (max-width: 768px) {
+            .video-grid {
+                grid-template-columns: 1fr; /* Una columna en pantallas pequeñas */
+                padding: 0 15px 30px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            .video-box {
+                max-width: 400px; /* Limita el ancho de los cuadros en móviles */
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Recursos Audiovisuales</h1>
+
+    <div class="video-grid" id="videoGrid">
+        </div>
+
+    <script>
+        // Array con los datos de tus videos locales
+        // Asegúrate de que las rutas a los videos sean correctas.
+        // Por ejemplo, si tus videos están en una carpeta llamada 'videos' en el mismo nivel que recursos.html:
+        const videoData = [
+            { path: "ssstik.io_@memorias.de.tiza_1750806635501.mp4", title: "La sopa de piedra" },
+            { path: "ssstik.io_@ingenioeducativo__1750889655473.mp4", title: "No todos aprenden igual" },
+            { path: "ssstik.io_@cerebroquiz99_1750889979727.mp4", title: "Test de lengua y Literatura" },
+            { path: "ssstik.io_@chrisvalanmi_1750890524579.mp4", title: "Conectores de Texto" },
+            { path: "videos/video5.mp4", title: "La Importancia de Leer" },
+            { path: "videos/video6.mp4", title: "Ejercicios de Ortografía" },
+            { path: "videos/video7.mp4", title: "Cuentos Cortos Animados" },
+            { path: "videos/video8.mp4", title: "Cómo Crear Personajes" },
+            { path: "videos/video9.mp4", title: "El Arte de la Descripción" },
+            { path: "videos/video10.mp4", title: "Expresión Oral y Confianza" },
+            { path: "videos/video11.mp4", title: "Historia de la Literatura" },
+            { path: "videos/video12.mp4", title: "Análisis de Textos Simples" },
+            { path: "videos/video13.mp4", title: "Mitos y Leyendas Clásicas" },
+            { path: "videos/video14.mp4", "title": "Juegos de Palabras Divertidos" },
+            { path: "videos/video15.mp4", "title": "Consejos para Escribir un Diario" },
+            { path: "videos/video16.mp4", "title": "El Significado de los Proverbios" },
+            { path: "videos/video17.mp4", "title": "Aprende con Rimas" },
+            { path: "videos/video18.mp4", "title": "Explorando la Naturaleza en Textos" },
+            { path: "videos/video19.mp4", "title": "Creando tus Propias Fábulas" },
+            { path: "videos/video20.mp4", "title": "Retos de Lectura Diaria" }
+            // Puedes agregar más videos aquí, solo asegúrate de tener los archivos .mp4/.webm correspondientes en la carpeta 'videos'
+            // { path: "videos/video21.mp4", title: "Nuevo Tema Interesante" },
+        ];
+
+        const videoGrid = document.getElementById('videoGrid');
+
+        /**
+         * Crea un elemento de cuadro de video (video-box) con su reproductor y título.
+         * @param {object} video - Objeto con 'path' (ruta al archivo de video) y 'title'.
+         * @returns {HTMLElement} El elemento div que representa el cuadro de video.
+         */
+        function createVideoBox(video) {
+            const box = document.createElement('div');
+            box.classList.add('video-box');
+
+            const playerContainer = document.createElement('div');
+            playerContainer.classList.add('video-player-container');
+            // Texto/ícono inicial dentro del contenedor, que desaparecerá al reproducir
+            playerContainer.innerHTML = 'Pulsa para reproducir'; 
+
+            // Manejador de clic para iniciar la reproducción
+            playerContainer.addEventListener('click', function() {
+                playLocalVideo(playerContainer, video.path);
+            }, { once: true }); // { once: true } asegura que el evento se ejecuta solo una vez
+
+            const title = document.createElement('div');
+            title.classList.add('video-title');
+            title.textContent = video.title;
+
+            box.appendChild(playerContainer);
+            box.appendChild(title);
+            return box;
+        }
+
+        /**
+         * Incrusta y reproduce un video local en el contenedor dado.
+         * @param {HTMLElement} container - El elemento div .video-player-container.
+         * @param {string} videoPath - La ruta al archivo de video local.
+         */
+        function playLocalVideo(container, videoPath) {
+            container.classList.add('playing'); // Agrega clase para ocultar el ícono de play
+            
+            const videoElement = document.createElement('video');
+            videoElement.controls = true; // Muestra los controles de reproducción (play/pause, volumen, etc.)
+            videoElement.autoplay = true; // Intenta reproducir automáticamente
+            videoElement.src = videoPath;
+            videoElement.type = 'video/mp4'; // O 'video/webm' si usas ese formato
+
+            container.innerHTML = ''; // Limpia el contenido actual (el texto "Pulsa para reproducir")
+            container.appendChild(videoElement);
+
+            // Opcional: Manejar errores de carga
+            videoElement.onerror = function() {
+                console.error("Error al cargar el video:", videoPath);
+                container.innerHTML = '<p style="color:red; font-size: 0.8em; text-align: center;">Error al cargar el video.</p>';
+            };
+
+            videoElement.play().catch(error => {
+                console.warn("Autoplay bloqueado o falló para el video:", videoPath, error);
+                // Si el autoplay falla (común en navegadores), asegúrate de que los controles sean visibles
+            });
+        }
+
+        // Genera todos los cuadros de video al cargar la página
+        videoData.forEach(video => {
+            const videoBox = createVideoBox(video);
+            videoGrid.appendChild(videoBox);
+        });
+
+        /**
+         * Función para agregar un nuevo video de forma dinámica si lo necesitas.
+         * Puedes llamarla desde la consola del navegador o desde otro script.
+         * @param {string} videoFilePath - La ruta al nuevo archivo de video local (ej. "videos/nuevo_video.mp4").
+         * @param {string} videoTitle - El título del nuevo video.
+         */
+        function addMoreVideoBox(videoFilePath, videoTitle) {
+            const newVideo = { path: videoFilePath, title: videoTitle };
+            videoData.push(newVideo); // Agrega al array de datos si quieres mantener un registro
+            const newVideoBox = createVideoBox(newVideo);
+            videoGrid.appendChild(newVideoBox);
+            console.log(`Video "${videoTitle}" agregado dinámicamente.`);
+        }
+
+        // Ejemplo de cómo agregar un video adicional después de que la página cargue
+        // setTimeout(() => {
+        //     addMoreVideoBox("videos/video21.mp4", "¡Descubre la Magia de Contar!");
+        // }, 3000); // Agrega un nuevo video 3 segundos después de cargar la página
+    </script>
+</body>
+</html>
